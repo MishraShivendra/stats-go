@@ -67,13 +67,15 @@ func (p *Pers) LoadFileToMem() *[]stats.TimeEntry {
 	return &entries
 }
 
-func (p *Pers) DumpToFile(data *[]stats.TimeEntry) error {
+func (p *Pers) DumpToFile(s *stats.Stats) error {
 
 	var sb strings.Builder
-	for _, entry := range *data {
+	s.Lock.Lock()
+	for _, entry := range s.RingBuff {
 		entryStr := fmt.Sprintf("%d %d\n", entry.TimeStamp, entry.Count)
 		sb.WriteString(entryStr)
 	}
+	s.Lock.Unlock()
 	dataToWrite := sb.String()
 	err := ioutil.WriteFile(p.File, []byte(dataToWrite), 0644)
 	if err != nil {

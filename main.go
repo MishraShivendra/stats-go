@@ -22,7 +22,7 @@ func main() {
 	go func(p *persistency.Pers, s *stats.Stats) {
 		ticker := time.Tick(100 * time.Millisecond)
 		for range ticker {
-			p.DumpToFile(&s.RingBuff)
+			p.DumpToFile(s)
 		}
 	}(dbReader, StatHandler)
 	go StatHandler.PeriodicCleanup()
